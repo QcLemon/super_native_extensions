@@ -114,8 +114,10 @@ class DropContextImpl extends DropContext {
   Future<void> initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
     _channel.setMethodCallHandler(_handleMethodCall);
-    final engineHandle = await EngineContext.instance.getEngineHandle();
-    await _channel.invokeMethod('newContext', {'engineHandle': engineHandle});
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final engineHandle = await EngineContext.instance.getEngineHandle();
+      await _channel.invokeMethod('newContext', {'engineHandle': engineHandle});
+    });
   }
 
   Session _sessionForEvent(dynamic event) {
