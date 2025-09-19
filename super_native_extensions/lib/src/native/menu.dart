@@ -175,10 +175,12 @@ class MenuContextImpl extends MenuContext {
   @override
   Future<void> initialize() async {
     super.initialize();
-    final engineHandle = await EngineContext.instance.getEngineHandle();
-    _channel.setMethodCallHandler(_handleMethodCall);
-    await _channel.invokeMethod('newContext', {
-      'engineHandle': engineHandle,
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final engineHandle = await EngineContext.instance.getEngineHandle();
+      _channel.setMethodCallHandler(_handleMethodCall);
+      await _channel.invokeMethod('newContext', {
+        'engineHandle': engineHandle,
+      });
     });
   }
 
